@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from urllib.parse import quote, unquote
-from anytree import Node, find_by_attr
+from tree import Node, find_by_attr
 from collections import deque
 import time
 
