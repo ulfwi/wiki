@@ -38,6 +38,7 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
 
     # convert to percentage encoding
     start = quote(start)
+    goal = quote(goal)
 
     shortest_path = None
     start_node = Node('')
@@ -87,20 +88,21 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
 
 def main():
     
-    wiki_url = 'https://en.wikipedia.org/wiki/'
-    # wiki_url = 'https://sv.wikipedia.org/wiki/'
+    # wiki_url = 'https://en.wikipedia.org/wiki/'
+    wiki_url = 'https://sv.wikipedia.org/wiki/'
 
     # start wiki-page
-    start = 'Scottish_Terrier'
+    # start = 'Scottish_Terrier'
     # start = 'Zara_Larsson'
     # start = 'Torslanda'
     # start = 'Gävle'
-    # start = 'Smörgåstårta'
+    start = 'Smörgåstårta'
     # start = 'Adolf_Hitler'
 
     # goal wiki-page
-    goal = 'Adolf_Hitler'
+    # goal = 'Adolf_Hitler'
     # goal = 'Zara_Larsson'
+    goal = 'Svenskt_Näringsliv'
 
 
     # find shortest path between start and goal
