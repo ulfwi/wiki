@@ -1,8 +1,8 @@
-# TODO
+# wiki
 
-* Make program independent of non-standard modules (anytree)
-    * Make my own Node class?
-    * Copy anytree into my repository
+Finds shortest path between two wikipedia pages.
+
+# TODO
 
 * Add user input
 
