@@ -104,12 +104,12 @@ def main():
     # goal = 'Zara_Larsson'
     goal = 'Svenskt_Näringsliv'
 
-
+    t = time.time()
     # find shortest path between start and goal
     shortest_path = find_shortest_path(start, goal, wiki_url)
 
     if shortest_path is not None:
-        print('\n' + goal + ' was found!')
+        print('\n' + goal + ' was found in ' + str(round(time.time()-t, 2)) + ' seconds!')
         print('Shortest path: ' + shortest_path)
     else:
         print('\nNo path was found.')
