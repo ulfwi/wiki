@@ -4,33 +4,6 @@ from anytree import Node, find_by_attr
 from collections import deque
 import time
 
-wiki = 'https://en.wikipedia.org/wiki/'
-# wiki = 'https://sv.wikipedia.org/wiki/'
-
-# start wiki-page
-# start = 'Eva_Braun'
-# start = 'Rome'
-# start = 'Scottish_Terrier'
-# start = 'Monopoly_(game)'
-# start = 'Zara_Larsson'
-# start = 'Torslanda'
-# start = 'Gävle'
-start = 'Smörgåstårta'
-# start = 'Salata_de_boeuf'
-# start = 'Adolf_Hitler'
-
-# goal wiki-page
-goal = 'Adolf_Hitler'
-# goal = 'Zara_Larsson'
-
-# convert to percentage encoding
-start = quote(start)
-
-# TODO
-# class Node():
-# make wiki_list_open into a queue (collections.deque)
-
-print_time_bool = False
 
 def get_url_deque(wiki_url):
 
@@ -61,44 +34,84 @@ def get_url_deque(wiki_url):
     return wiki_deque
 
 
-start_node = Node('')
-parent_node = Node(start, parent=start_node)
-wiki_deque_open = deque([start])
-wiki_deque_closed = deque([])
-while wiki_deque_open:
+def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
 
-    # pop url from open list
-    url_parent = wiki_deque_open.popleft()
+    # convert to percentage encoding
+    start = quote(start)
 
-    t = time.time()
-    parent_node = find_by_attr(start_node, url_parent)
-    if print_time_bool: print('Finding parent node: ' + str(time.time() - t))
+    shortest_path = None
+    start_node = Node('')
+    parent_node = Node(start, parent=start_node)
+    wiki_deque_open = deque([start])
+    wiki_deque_closed = deque([])
+    while wiki_deque_open:
 
-    # convert from percentage encoding 
-    print(unquote(str(parent_node)[8:-2]))
+        # pop url from open list
+        url_parent = wiki_deque_open.popleft()
 
-    t = time.time()
-    # get children of url
-    wiki_deque = get_url_deque(wiki + url_parent)
-    if print_time_bool: print('Downloading html: ' + str(time.time() - t))
+        t = time.time()
+        parent_node = find_by_attr(start_node, url_parent)
+        if print_time_bool: print('Finding parent node: ' + str(time.time() - t))
 
-    t = time.time()
+        # convert from percentage encoding 
+        print(unquote(str(parent_node)[8:-2]))
 
-    # add url to closed list
-    wiki_deque_closed.append(url_parent)
+        t = time.time()
+        # get children of url
+        wiki_deque = get_url_deque(wiki_url + url_parent)
+        if print_time_bool: print('Downloading html: ' + str(time.time() - t))
 
-    for url in wiki_deque:
-        if not url in wiki_deque_closed and not url in wiki_deque_open:
-            if url == goal:
-                print('\n' + goal + ' was found!')
-                goal_node = Node(url, parent=parent_node)
-                print('Shortest path: ' + unquote(str(goal_node)[8:-2]))
+        t = time.time()
 
-                # break out of while loop
-                wiki_deque_open = deque([])
-                break
-            else:
-                wiki_deque_open.append(url)
-                Node(url, parent=parent_node)
+        # add url to closed list
+        wiki_deque_closed.append(url_parent)
+
+        for url in wiki_deque:
+            if not url in wiki_deque_closed and not url in wiki_deque_open:
+                if url == goal:
+
+                    goal_node = Node(url, parent=parent_node)
+                    shortest_path = unquote(str(goal_node)[8:-2])
+
+                    # break out of while loop
+                    wiki_deque_open = deque([])
+                    break
+                else:
+                    wiki_deque_open.append(url)
+                    Node(url, parent=parent_node)
+        
+        if print_time_bool: print('Iterating over wiki_list: ' + str(time.time() - t))
     
-    if print_time_bool: print('Iterating over wiki_list: ' + str(time.time() - t))
+    return shortest_path
+
+
+def main():
+    
+    wiki_url = 'https://en.wikipedia.org/wiki/'
+    # wiki_url = 'https://sv.wikipedia.org/wiki/'
+
+    # start wiki-page
+    start = 'Scottish_Terrier'
+    # start = 'Zara_Larsson'
+    # start = 'Torslanda'
+    # start = 'Gävle'
+    # start = 'Smörgåstårta'
+    # start = 'Adolf_Hitler'
+
+    # goal wiki-page
+    goal = 'Adolf_Hitler'
+    # goal = 'Zara_Larsson'
+
+
+    # find shortest path between start and goal
+    shortest_path = find_shortest_path(start, goal, wiki_url)
+
+    if shortest_path is not None:
+        print('\n' + goal + ' was found!')
+        print('Shortest path: ' + shortest_path)
+    else:
+        print('\nNo path was found.')
+
+
+if __name__ == '__main__':
+    main()
