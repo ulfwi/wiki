@@ -4,8 +4,8 @@ from anytree import Node, find_by_attr
 from collections import deque
 import time
 
-# wiki = 'https://en.wikipedia.org/wiki/'
-wiki = 'https://sv.wikipedia.org/wiki/'
+wiki = 'https://en.wikipedia.org/wiki/'
+# wiki = 'https://sv.wikipedia.org/wiki/'
 
 # start wiki-page
 # start = 'Eva_Braun'
@@ -13,9 +13,9 @@ wiki = 'https://sv.wikipedia.org/wiki/'
 # start = 'Scottish_Terrier'
 # start = 'Monopoly_(game)'
 # start = 'Zara_Larsson'
-start = 'Torslanda'
+# start = 'Torslanda'
 # start = 'Gävle'
-# start = 'Smorgastarta'
+start = 'Smörgåstårta'
 # start = 'Salata_de_boeuf'
 # start = 'Adolf_Hitler'
 
@@ -32,7 +32,7 @@ start = quote(start)
 
 print_time_bool = False
 
-def get_url_list(wiki_url):
+def get_url_deque(wiki_url):
 
     # download html
     html = urlopen(wiki_url).read().decode('utf-8')
@@ -42,7 +42,7 @@ def get_url_list(wiki_url):
 
     beg = 0
     end = len(html)
-    wiki_list = []
+    wiki_deque = ([])
 
     while beg != -1:
         # find regexp_beg in html string
@@ -56,21 +56,19 @@ def get_url_list(wiki_url):
 
             # don't include urls with : in them
             if url.find(':') == -1:
-                wiki_list += [url]
+                wiki_deque.append(url)
 
-    return wiki_list
+    return wiki_deque
 
 
 start_node = Node('')
 parent_node = Node(start, parent=start_node)
-wiki_list_open = [start]
-wiki_list_closed = []
-# wiki_deque_open = deque([start])
-# wiki_deque_closed = deque([])
-while wiki_list_open:
+wiki_deque_open = deque([start])
+wiki_deque_closed = deque([])
+while wiki_deque_open:
 
     # pop url from open list
-    url_parent = wiki_list_open.pop(0)
+    url_parent = wiki_deque_open.popleft()
 
     t = time.time()
     parent_node = find_by_attr(start_node, url_parent)
@@ -81,26 +79,26 @@ while wiki_list_open:
 
     t = time.time()
     # get children of url
-    wiki_list = get_url_list(wiki + url_parent)
+    wiki_deque = get_url_deque(wiki + url_parent)
     if print_time_bool: print('Downloading html: ' + str(time.time() - t))
 
     t = time.time()
 
     # add url to closed list
-    wiki_list_closed += [url_parent]
+    wiki_deque_closed.append(url_parent)
 
-    for url in wiki_list:
-        if not url in wiki_list_closed and not url in wiki_list_open:
+    for url in wiki_deque:
+        if not url in wiki_deque_closed and not url in wiki_deque_open:
             if url == goal:
-                print(goal + ' was found!')
+                print('\n' + goal + ' was found!')
                 goal_node = Node(url, parent=parent_node)
-                print('Shortest path: ' + str(goal_node)[8:-2])
+                print('Shortest path: ' + unquote(str(goal_node)[8:-2]))
 
                 # break out of while loop
-                wiki_list_open = []
+                wiki_deque_open = deque([])
                 break
             else:
-                wiki_list_open += [url]
+                wiki_deque_open.append(url)
                 Node(url, parent=parent_node)
     
     if print_time_bool: print('Iterating over wiki_list: ' + str(time.time() - t))
