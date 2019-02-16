@@ -44,7 +44,7 @@ class Node(object):
         ancestors_str = ''
         if len(ancestor_list) > 1:
             for name in ancestor_list[1:]:
-                ancestors_str += name + '\\'
+                ancestors_str += name + '/'
         ancestors_str += self.name
         return ancestors_str
 
