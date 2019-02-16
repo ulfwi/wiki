@@ -1,8 +1,8 @@
 # coding=utf-8
 import sys
-from tree import Node, find_by_attr
 from collections import deque
 import time
+from node import Node
 
 # check python version
 if sys.version_info[0] < 3:
@@ -49,8 +49,7 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
     goal = quote(goal)
 
     shortest_path = None
-    start_node = Node('')
-    parent_node = Node(start, parent=start_node)
+    node = Node(start)
     wiki_deque_open = deque([start])
     wiki_deque_closed = deque([])
     while wiki_deque_open:
@@ -59,11 +58,11 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
         url_parent = wiki_deque_open.popleft()
 
         t = time.time()
-        parent_node = find_by_attr(start_node, url_parent)
+        node = Node.find(url_parent)
         if print_time_bool: print('Finding parent node: ' + str(time.time() - t))
 
         # convert from percentage encoding 
-        print(unquote(str(parent_node)[8:-2]))
+        print(unquote(str(node)))
 
         t = time.time()
         # get children of url
@@ -79,15 +78,15 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
             if not url in wiki_deque_closed and not url in wiki_deque_open:
                 if url == goal:
 
-                    goal_node = Node(url, parent=parent_node)
-                    shortest_path = unquote(str(goal_node)[8:-2])
+                    goal_node = node.create_child(url)
+                    shortest_path = unquote(str(goal_node))
 
                     # break out of while loop
                     wiki_deque_open = deque([])
                     break
                 else:
                     wiki_deque_open.append(url)
-                    Node(url, parent=parent_node)
+                    node.create_child(url)
 
         if print_time_bool: print('Iterating over wiki_list: ' + str(time.time() - t))
 
