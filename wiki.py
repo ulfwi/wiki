@@ -1,8 +1,16 @@
-from urllib.request import urlopen
-from urllib.parse import quote, unquote
+# coding=utf-8
+import sys
 from tree import Node, find_by_attr
 from collections import deque
 import time
+
+# check python version
+if sys.version_info[0] < 3:
+    from six.moves import urllib
+    from urllib import urlopen, quote, unquote
+else:
+    from urllib.request import urlopen
+    from urllib.parse import quote, unquote
 
 
 def get_url_deque(wiki_url):
@@ -80,14 +88,14 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
                 else:
                     wiki_deque_open.append(url)
                     Node(url, parent=parent_node)
-        
+
         if print_time_bool: print('Iterating over wiki_list: ' + str(time.time() - t))
-    
+
     return shortest_path
 
 
 def main():
-    
+
     # wiki_url = 'https://en.wikipedia.org/wiki/'
     wiki_url = 'https://sv.wikipedia.org/wiki/'
 
