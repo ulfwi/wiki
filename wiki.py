@@ -1,4 +1,5 @@
 # coding=utf-8
+""" Contains functions that can find the shortest path to Hitler on wikipedia """
 import sys
 from collections import deque
 import time
@@ -14,6 +15,7 @@ else:
 
 
 def get_url_deque(wiki_url):
+    """ Returns a deque object containing all urls that the page wiki_url links to """
 
     # download html
     html = urlopen(wiki_url).read().decode('utf-8')
@@ -43,6 +45,7 @@ def get_url_deque(wiki_url):
 
 
 def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
+    """ Finds shortest path between start and goal on wikipedia """
 
     # convert to percentage encoding
     start = quote(start)
@@ -57,19 +60,21 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
         # pop url from open list
         url_parent = wiki_deque_open.popleft()
 
-        t = time.time()
+        t_0 = time.time()
         node = Node.find(url_parent)
-        if print_time_bool: print('Finding parent node: ' + str(time.time() - t))
+        if print_time_bool:
+            print('Finding parent node: ' + str(time.time() - t_0))
 
-        # convert from percentage encoding 
+        # convert from percentage encoding
         print(unquote(str(node)))
 
-        t = time.time()
+        t_0 = time.time()
         # get children of url
         wiki_deque = get_url_deque(wiki_url + url_parent)
-        if print_time_bool: print('Downloading html: ' + str(time.time() - t))
+        if print_time_bool:
+            print('Downloading html: ' + str(time.time() - t_0))
 
-        t = time.time()
+        t_0 = time.time()
 
         # add url to closed list
         wiki_deque_closed.append(url_parent)
@@ -88,12 +93,14 @@ def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
                     wiki_deque_open.append(url)
                     node.create_child(url)
 
-        if print_time_bool: print('Iterating over wiki_list: ' + str(time.time() - t))
+        if print_time_bool:
+            print('Iterating over wiki_list: ' + str(time.time() - t_0))
 
     return shortest_path
 
 
 def main():
+    """ Wiki main function """
 
     # wiki_url = 'https://en.wikipedia.org/wiki/'
     wiki_url = 'https://sv.wikipedia.org/wiki/'
@@ -111,12 +118,12 @@ def main():
     # goal = 'Zara_Larsson'
     goal = 'Svenskt_Näringsliv'
 
-    t = time.time()
+    t_0 = time.time()
     # find shortest path between start and goal
     shortest_path = find_shortest_path(start, goal, wiki_url)
 
     if shortest_path is not None:
-        print('\n' + goal + ' was found in ' + str(round(time.time()-t, 2)) + ' seconds!')
+        print('\n' + goal + ' was found in ' + str(round(time.time()-t_0, 2)) + ' seconds!')
         print('Shortest path: ' + shortest_path)
     else:
         print('\nNo path was found.')

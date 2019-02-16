@@ -1,9 +1,11 @@
 # coding=utf-8
+""" Unit tests for wiki.py """
 import unittest
 import wiki
 
 
 class TestWiki(unittest.TestCase):
+    """ Unit tests for wiki.py """
 
     def test_terrier(self):
         """
@@ -31,7 +33,19 @@ class TestWiki(unittest.TestCase):
         shortest_path = wiki.find_shortest_path(start, goal, wiki_url)
         actual_shortest_path = 'Smörgåstårta/Sveriges_nationaldag/Svenskt_Näringsliv'
         self.assertEqual(shortest_path, actual_shortest_path)
- 
- 
+
+    # def test_long_path(self):
+    #     """
+    #     Tests long path to Hitler
+    #     """
+
+    #     wiki_url = 'https://sv.wikipedia.org/wiki/'
+    #     start = 'Smörgåstårta'
+    #     goal = 'Svenskt_Näringsliv'
+
+    #     shortest_path = wiki.find_shortest_path(start, goal, wiki_url)
+    #     actual_shortest_path = 'Smörgåstårta/Sveriges_nationaldag/Svenskt_Näringsliv'
+    #     self.assertEqual(shortest_path, actual_shortest_path)
+
 if __name__ == '__main__':
     unittest.main()

@@ -5,6 +5,12 @@ Finds shortest path between two wikipedia pages.
 # TODO
 
 * Check if wikipage actually exists
+    * Add unit test for this
+        * No path was found maybe?
+
+* Add unit test for long paths
+
+* Should wiki.py be a class?
 
 * Maybe create a Tree class that contains all nodes
 
