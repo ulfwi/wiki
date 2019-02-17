@@ -10,8 +10,6 @@ Finds shortest path between two wikipedia pages.
 
 * Add unit test for long paths
 
-* Should wiki.py be a class?
-
 * Maybe create a Tree class that contains all nodes
 
 * Add user input

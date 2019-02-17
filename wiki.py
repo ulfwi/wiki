@@ -1,5 +1,5 @@
 # coding=utf-8
-""" Contains functions that can find the shortest path to Hitler on wikipedia """
+""" Contains a class that can find the shortest path to Hitler on wikipedia """
 import sys
 from collections import deque
 import time
@@ -14,120 +14,99 @@ else:
     from urllib.parse import quote, unquote
 
 
-def get_url_deque(wiki_url):
-    """ Returns a deque object containing all urls that the page wiki_url links to """
+class WikiSearcher(object):
+    """ Class that can find the shortest path to Hitler on wikipedia """
 
-    # download html
-    html = urlopen(wiki_url).read().decode('utf-8')
+    def __init__(self, wiki_url):
+        """ Creates a Wiki Search object """
+        self.wiki_url = wiki_url
 
-    regexp_beg = 'href="/wiki/'
-    regexp_end = '"'
+    def set_wiki_url(self, wiki_url):
+        """ Change the wiki url """
+        self.wiki_url = wiki_url
 
-    beg = 0
-    end = len(html)
-    wiki_deque = ([])
+    def get_url_deque(self, subject_parent):
+        """ Returns a deque object containing all urls that the page subject_parent links to """
 
-    while beg != -1:
-        # find regexp_beg in html string
-        beg = html.find(regexp_beg, beg + 1, end)
-        if beg != -1:
-            # find last index of url
-            end_url = html.find(regexp_end, beg + 6, end)
+        url = self.wiki_url + subject_parent
 
-            # extract subject
-            url = html[beg + 12:end_url]
+        # download html
+        html = urlopen(url).read().decode('utf-8')
 
-            # don't include urls with : in them
-            if url.find(':') == -1:
-                wiki_deque.append(url)
+        regexp_beg = 'href="/wiki/'
+        regexp_end = '"'
 
-    return wiki_deque
+        beg = 0
+        end = len(html)
+        wiki_deque = ([])
 
+        while beg != -1:
+            # find regexp_beg in html string
+            beg = html.find(regexp_beg, beg + 1, end)
+            if beg != -1:
+                # find last index of url
+                end_url = html.find(regexp_end, beg + 6, end)
 
-def find_shortest_path(start, goal, wiki_url, print_time_bool=False):
-    """ Finds shortest path between start and goal on wikipedia """
+                # extract subject
+                url = html[beg + 12:end_url]
 
-    # convert to percentage encoding
-    start = quote(start)
-    goal = quote(goal)
+                # don't include urls with : in them
+                if url.find(':') == -1:
+                    wiki_deque.append(url)
 
-    shortest_path = None
-    node = Node(start)
-    wiki_deque_open = deque([start])
-    wiki_deque_closed = deque([])
-    while wiki_deque_open:
-
-        # pop url from open list
-        url_parent = wiki_deque_open.popleft()
-
-        t_0 = time.time()
-        node = Node.find(url_parent)
-        if print_time_bool:
-            print('Finding parent node: ' + str(time.time() - t_0))
-
-        # convert from percentage encoding
-        print(unquote(str(node)))
-
-        t_0 = time.time()
-        # get children of url
-        wiki_deque = get_url_deque(wiki_url + url_parent)
-        if print_time_bool:
-            print('Downloading html: ' + str(time.time() - t_0))
-
-        t_0 = time.time()
-
-        # add url to closed list
-        wiki_deque_closed.append(url_parent)
-
-        for url in wiki_deque:
-            if not url in wiki_deque_closed and not url in wiki_deque_open:
-                if url == goal:
-
-                    goal_node = node.create_child(url)
-                    shortest_path = unquote(str(goal_node))
-
-                    # break out of while loop
-                    wiki_deque_open = deque([])
-                    break
-                else:
-                    wiki_deque_open.append(url)
-                    node.create_child(url)
-
-        if print_time_bool:
-            print('Iterating over wiki_list: ' + str(time.time() - t_0))
-
-    return shortest_path
+        return wiki_deque
 
 
-def main():
-    """ Wiki main function """
+    def find_shortest_path(self, start, goal, print_time_bool=False):
+        """ Finds shortest path between start and goal on wikipedia """
 
-    # wiki_url = 'https://en.wikipedia.org/wiki/'
-    wiki_url = 'https://sv.wikipedia.org/wiki/'
+        # convert to percentage encoding
+        start = quote(start)
+        goal = quote(goal)
 
-    # start wiki-page
-    # start = 'Scottish_Terrier'
-    # start = 'Zara_Larsson'
-    # start = 'Torslanda'
-    # start = 'Gävle'
-    start = 'Smörgåstårta'
-    # start = 'Adolf_Hitler'
+        shortest_path = None
+        node = Node(start)
+        wiki_deque_open = deque([start])
+        wiki_deque_closed = deque([])
+        while wiki_deque_open:
 
-    # goal wiki-page
-    # goal = 'Adolf_Hitler'
-    # goal = 'Zara_Larsson'
-    goal = 'Svenskt_Näringsliv'
+            # pop subject from open list
+            subject_parent = wiki_deque_open.popleft()
 
-    t_0 = time.time()
-    # find shortest path between start and goal
-    shortest_path = find_shortest_path(start, goal, wiki_url)
+            t_0 = time.time()
+            node = Node.find(subject_parent)
+            if print_time_bool:
+                print('Finding parent node: ' + str(time.time() - t_0))
 
-    if shortest_path is not None:
-        print('\n' + goal + ' was found in ' + str(round(time.time()-t_0, 2)) + ' seconds!')
-        print('Shortest path: ' + shortest_path)
-    else:
-        print('\nNo path was found.')
+            # convert from percentage encoding
+            print(unquote(str(node)))
 
+            t_0 = time.time()
+            # get children of url
+            wiki_deque = WikiSearcher.get_url_deque(self, subject_parent)
+            if print_time_bool:
+                print('Downloading html: ' + str(time.time() - t_0))
 
-if __name__ == '__main__':
-    main()
+            t_0 = time.time()
+
+            # add url to closed list
+            wiki_deque_closed.append(subject_parent)
+
+            for url in wiki_deque:
+                if not url in wiki_deque_closed and not url in wiki_deque_open:
+                    if url == goal:
+
+                        goal_node = node.create_child(url)
+                        shortest_path = unquote(str(goal_node))
+
+                        # break out of while loop
+                        wiki_deque_open = deque([])
+                        break
+                    else:
+                        wiki_deque_open.append(url)
+                        node.create_child(url)
+
+            if print_time_bool:
+                print('Iterating over wiki_list: ' + str(time.time() - t_0))
+
+        return shortest_path

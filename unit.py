@@ -16,7 +16,9 @@ class TestWiki(unittest.TestCase):
         start = 'Scottish_Terrier'
         goal = 'Adolf_Hitler'
 
-        shortest_path = wiki.find_shortest_path(start, goal, wiki_url)
+        wiki_searcher = wiki.WikiSearcher(wiki_url)
+
+        shortest_path = wiki_searcher.find_shortest_path(start, goal)
         actual_shortest_path = 'Scottish_Terrier/Franklin_Delano_Roosevelt/Adolf_Hitler'
         self.assertEqual(shortest_path, actual_shortest_path)
 
@@ -30,7 +32,9 @@ class TestWiki(unittest.TestCase):
         start = 'Smörgåstårta'
         goal = 'Svenskt_Näringsliv'
 
-        shortest_path = wiki.find_shortest_path(start, goal, wiki_url)
+        wiki_searcher = wiki.WikiSearcher(wiki_url)
+
+        shortest_path = wiki_searcher.find_shortest_path(start, goal)
         actual_shortest_path = 'Smörgåstårta/Sveriges_nationaldag/Svenskt_Näringsliv'
         self.assertEqual(shortest_path, actual_shortest_path)
 
