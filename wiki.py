@@ -131,6 +131,7 @@ class WikiSearcher(object):
         goal = quote(goal)
 
         shortest_path = None
+        Node.clear_node_list()  # remove all objects from node list
         node = Node(start)
         wiki_deque_open = deque([start])
         wiki_deque_closed = deque([])

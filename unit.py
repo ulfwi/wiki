@@ -23,6 +23,40 @@ class TestWiki(unittest.TestCase):
         self.assertEqual(shortest_path, actual_shortest_path)
 
 
+    def test_offline(self):
+        """
+        Tests offline
+        """
+
+        wiki_url = ''
+        start = 'Torslanda'
+        goal = 'Adolf_Hitler'
+
+        wiki_searcher = wiki.WikiSearcher(wiki_url, retrieval_mode='offline')
+
+        shortest_path = wiki_searcher.find_shortest_path(start, goal)
+        actual_shortest_path = 'Torslanda/Göteborgs_kommun/1938/Adolf_Hitler_fdc0'
+        self.assertEqual(shortest_path, actual_shortest_path)
+
+        del wiki_searcher
+
+
+    def test_offline_gavle(self):
+        """
+        Tests offline with first page with a non-ascii letter
+        """
+
+        wiki_url = ''
+        start = 'Gävle'
+        goal = 'Svenskt_Näringsliv'
+
+        wiki_searcher = wiki.WikiSearcher(wiki_url, retrieval_mode='offline')
+
+        shortest_path = wiki_searcher.find_shortest_path(start, goal)
+        actual_shortest_path = 'Gävle/Gävleborgs_län/Jämtlands_län/Svenskt_Näringsliv_af61'
+        self.assertEqual(shortest_path, actual_shortest_path)
+
+
     def test_smorgastarta(self):
         """
         Tests non-ascii letters

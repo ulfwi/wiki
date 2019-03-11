@@ -28,6 +28,10 @@ class Node(object):
 
         return None
 
+    @staticmethod
+    def clear_node_list():
+        Node.node_list = []
+
     def get_ancestors_list(self):
         """ Returns a list with all ancestors, oldest first """
 
