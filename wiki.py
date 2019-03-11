@@ -70,7 +70,12 @@ class WikiSearcher(object):
                 url = html[beg + len(regexp_beg):end_url]
 
                 # don't include urls with : in them
-                if url.find(':') == -1:
+                if url.find(':') == -1 \
+                    and url.find(quote('~')) == -1:
+                    # and url.find(quote('Bild~')) == -1 \
+                    # and url.find(quote('Användardiskussion~')) == -1 \
+                    # and url.find(quote('Användare~')) == -1 \
+                    # and url.find(quote('Kategori~')) == -1:
                     wiki_deque.append(url)
 
         return wiki_deque
