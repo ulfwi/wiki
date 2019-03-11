@@ -18,7 +18,8 @@ Download link to swedish wikipedia: https://dumps.wikimedia.org/other/static_htm
 
 * Save the title of the page in the node (e.g. "Adolf Hitler" instead of Adolf_Hitler)
     * Print this instead
+        * Replace _ with space maybe
 
-* FIle name searcher is not very sofisticated
+* File name searcher is not very sofisticated
 
 * Add user input

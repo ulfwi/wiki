@@ -30,6 +30,7 @@ class Node(object):
 
     def get_ancestors_list(self):
         """ Returns a list with all ancestors, oldest first """
+
         parent = self.parent
         ancestor_list = [parent]
         while parent != '':
@@ -40,19 +41,23 @@ class Node(object):
 
     def get_ancestors_str(self):
         """ Returns a string with all ancestors, oldest first """
+
         ancestor_list = Node.get_ancestors_list(self)
         ancestors_str = ''
         if len(ancestor_list) > 1:
             for name in ancestor_list[1:]:
                 # check if it contains .html (offline names only)
                 if '.html' in name:
-                    # remove parts of file path and .html
-                    name = name[6:-5]
+                    # remove parts of file path (find three first /) and .html
+                    split_list = name.split('/')
+                    name = split_list[-1][:-len('.html')]
+
                 ancestors_str += name + '/'
 
         if '.html' in self.name:
-            # remove parts of file path and .html
-            ancestors_str += self.name[6:-5]
+            # remove parts of file path (find three first /) and .html
+            split_list = self.name.split('/')
+            ancestors_str += split_list[-1][:-len('.html')]
         else:
             ancestors_str += self.name
 
