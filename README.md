@@ -2,6 +2,8 @@
 
 Finds shortest path between two wikipedia pages.
 
+Download link to swedish wikipedia: https://dumps.wikimedia.org/other/static_html_dumps/current/sv/
+
 # TODO
 
 * Check if wikipage actually exists
@@ -12,7 +14,11 @@ Finds shortest path between two wikipedia pages.
 
 * Maybe create a Tree class that contains all nodes
 
-* Add user input
+* Write node module in C instead
 
-* Download all of wikipedia
-    * Maybe only swedish
+* Save the title of the page in the node (e.g. "Adolf Hitler" instead of Adolf_Hitler)
+    * Print this instead
+
+* FIle name searcher is not very sofisticated
+
+* Add user input

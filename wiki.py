@@ -1,6 +1,7 @@
 # coding=utf-8
 """ Contains a class that can find the shortest path to Hitler on wikipedia """
 import sys
+import os
 from collections import deque
 import time
 from node import Node
@@ -17,23 +18,41 @@ else:
 class WikiSearcher(object):
     """ Class that can find the shortest path to Hitler on wikipedia """
 
-    def __init__(self, wiki_url):
+    def __init__(self, wiki_url, retrieval_mode='online'):
         """ Creates a Wiki Search object """
         self.wiki_url = wiki_url
+        self.retrieval_mode = retrieval_mode
 
     def set_wiki_url(self, wiki_url):
         """ Change the wiki url """
         self.wiki_url = wiki_url
 
+    def set_retrieval_mode(self, retrieval_mode):
+        """ Change the retrieval mode (online or offline) """
+        self.retrieval_mode = retrieval_mode
+
     def get_url_deque(self, subject_parent):
         """ Returns a deque object containing all urls that the page subject_parent links to """
 
-        url = self.wiki_url + subject_parent
+        if self.retrieval_mode == 'online':
+            url = self.wiki_url + subject_parent
 
-        # download html
-        html = urlopen(url).read().decode('utf-8')
+            # download html
+            html = urlopen(url).read().decode('utf-8')
 
-        regexp_beg = 'href="/wiki/'
+            regexp_beg = 'href="/wiki/'
+
+        elif self.retrieval_mode == 'offline':
+            filename = 'wikis/sv/articles/' + unquote(subject_parent)
+
+            try:
+                with open(filename) as wiki_file:
+                    html = wiki_file.read()
+            except:
+                return ([])
+
+            regexp_beg = 'href="../../../../articles/'
+
         regexp_end = '"'
 
         beg = 0
@@ -45,10 +64,10 @@ class WikiSearcher(object):
             beg = html.find(regexp_beg, beg + 1, end)
             if beg != -1:
                 # find last index of url
-                end_url = html.find(regexp_end, beg + 6, end)
+                end_url = html.find(regexp_end, beg + len(regexp_beg), end)
 
                 # extract subject
-                url = html[beg + 12:end_url]
+                url = html[beg + len(regexp_beg):end_url]
 
                 # don't include urls with : in them
                 if url.find(':') == -1:
@@ -56,9 +75,51 @@ class WikiSearcher(object):
 
         return wiki_deque
 
+    def find_offline_file(self, subject):
+        """ Finds offline file corresponding to the subject """
+
+        # get first three letters
+        idx = 0
+        let0 = subject[idx].lower()
+        # check if unicode characters
+        if let0 == '\xc2' or let0 == '\xc3':
+            let0 = subject[idx:idx+2].lower()
+            idx += 1
+        idx += 1
+        let1 = subject[idx].lower()
+        if let1 == '\xc2' or let1 == '\xc3':
+            let1 = subject[idx:idx+2].lower()
+            idx += 1
+        idx += 1
+        let2 = subject[idx].lower()
+        if let2 == '\xc2' or let2 == '\xc3':
+            let2 = subject[idx:idx+2].lower()
+
+        path = 'wikis/sv/articles/' + let0 + '/' + let1 + '/' + let2 + '/'
+
+        # iterate over all files in the directory
+        file_name_list = os.listdir(path)
+        for file_name in file_name_list:
+
+            # check if the file name matches the subject (10 represents _xxxx.html)
+            # 4 represent .html
+            if file_name[:len(subject)] == subject \
+                and ((len(file_name) == len(subject) + 10 and file_name[len(subject)] == '_') \
+                or len(file_name) == len(subject) + 5):
+
+                file_path = let0 + '/' + let1 + '/' + let2 + '/' + file_name
+                return file_path
+
+        return None
+
 
     def find_shortest_path(self, start, goal, print_time_bool=False):
         """ Finds shortest path between start and goal on wikipedia """
+
+        # find offline file
+        if self.retrieval_mode == 'offline':
+            start = self.find_offline_file(start)
+            goal = self.find_offline_file(goal)
 
         # convert to percentage encoding
         start = quote(start)
@@ -83,7 +144,7 @@ class WikiSearcher(object):
 
             t_0 = time.time()
             # get children of url
-            wiki_deque = WikiSearcher.get_url_deque(self, subject_parent)
+            wiki_deque = self.get_url_deque(subject_parent)
             if print_time_bool:
                 print('Downloading html: ' + str(time.time() - t_0))
 

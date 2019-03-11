@@ -44,8 +44,18 @@ class Node(object):
         ancestors_str = ''
         if len(ancestor_list) > 1:
             for name in ancestor_list[1:]:
+                # check if it contains .html (offline names only)
+                if '.html' in name:
+                    # remove parts of file path and .html
+                    name = name[6:-5]
                 ancestors_str += name + '/'
-        ancestors_str += self.name
+
+        if '.html' in self.name:
+            # remove parts of file path and .html
+            ancestors_str += self.name[6:-5]
+        else:
+            ancestors_str += self.name
+
         return ancestors_str
 
     def __str__(self):
