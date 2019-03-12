@@ -12,8 +12,6 @@ Download link to swedish wikipedia: https://dumps.wikimedia.org/other/static_htm
 
 * Add unit test for long paths
 
-* Maybe create a Tree class that contains all nodes
-
 * Write node module in C instead
 
 * Save the title of the page in the node (e.g. "Adolf Hitler" instead of Adolf_Hitler)
@@ -21,5 +19,9 @@ Download link to swedish wikipedia: https://dumps.wikimedia.org/other/static_htm
         * Replace _ with space maybe
 
 * File name searcher is not very sofisticated
+
+* Remove last _xxxx from print
+
+* Change so that wiki_url also can be file path to offline storage
 
 * Add user input

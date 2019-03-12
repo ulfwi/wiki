@@ -2,9 +2,9 @@
 """ Contains a class that can find the shortest path to Hitler on wikipedia """
 import sys
 import os
-from collections import deque
 import time
-from node import Node
+from collections import deque
+from tree import Tree
 
 # check python version
 if sys.version_info[0] < 3:
@@ -38,7 +38,7 @@ class WikiSearcher(object):
             url = self.wiki_url + subject_parent
 
             # download html
-            html = urlopen(url).read().decode('utf-8')
+            html = urlopen(url).read()
 
             regexp_beg = 'href="/wiki/'
 
@@ -107,10 +107,9 @@ class WikiSearcher(object):
         for file_name in file_name_list:
 
             # check if the file name matches the subject (10 represents _xxxx.html)
-            # 4 represent .html
             if file_name[:len(subject)] == subject \
                 and ((len(file_name) == len(subject) + 10 and file_name[len(subject)] == '_') \
-                or len(file_name) == len(subject) + 5):
+                or len(file_name) == len(subject) + len('.html')):
 
                 file_path = let0 + '/' + let1 + '/' + let2 + '/' + file_name
                 return file_path
@@ -130,9 +129,11 @@ class WikiSearcher(object):
         start = quote(start)
         goal = quote(goal)
 
+        # create node tree
+        tree = Tree()
+
         shortest_path = None
-        Node.clear_node_list()  # remove all objects from node list
-        node = Node(start)
+        node = tree.add_node(start)
         wiki_deque_open = deque([start])
         wiki_deque_closed = deque([])
         while wiki_deque_open:
@@ -141,12 +142,12 @@ class WikiSearcher(object):
             subject_parent = wiki_deque_open.popleft()
 
             t_0 = time.time()
-            node = Node.find(subject_parent)
+            node = tree.find(subject_parent)
             if print_time_bool:
                 print('Finding parent node: ' + str(time.time() - t_0))
 
             # convert from percentage encoding
-            print(unquote(str(node)))
+            print(unquote(tree.get_ancestors_str(node)))
 
             t_0 = time.time()
             # get children of url
@@ -163,15 +164,16 @@ class WikiSearcher(object):
                 if not url in wiki_deque_closed and not url in wiki_deque_open:
                     if url == goal:
 
-                        goal_node = node.create_child(url)
-                        shortest_path = unquote(str(goal_node))
+                        goal_node = tree.create_child(url, node)
+                        shortest_path = unquote(tree.get_ancestors_str(goal_node))
+                        print(shortest_path)
 
                         # break out of while loop
                         wiki_deque_open = deque([])
                         break
                     else:
                         wiki_deque_open.append(url)
-                        node.create_child(url)
+                        tree.create_child(url, node)
 
             if print_time_bool:
                 print('Iterating over wiki_list: ' + str(time.time() - t_0))

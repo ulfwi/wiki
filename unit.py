@@ -38,8 +38,6 @@ class TestWiki(unittest.TestCase):
         actual_shortest_path = 'Torslanda/Göteborgs_kommun/1938/Adolf_Hitler_fdc0'
         self.assertEqual(shortest_path, actual_shortest_path)
 
-        del wiki_searcher
-
 
     def test_offline_gavle(self):
         """
