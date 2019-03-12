@@ -47,6 +47,9 @@ class Tree(object):
         ancestors_str = ''
         if len(ancestor_list) > 1:
             for name in ancestor_list[1:]:
+                # replace all underscors with spaces
+                name = name.replace('_', ' ')
+
                 # check if it contains .html (offline names only)
                 if '.html' in name:
                     # remove parts of file path (find three first /) and .html
@@ -58,8 +61,9 @@ class Tree(object):
         if '.html' in node.name:
             # remove parts of file path (find three first /) and .html
             split_list = node.name.split('/')
-            ancestors_str += split_list[-1][:-len('.html')]
+            name = split_list[-1][:-len('.html')]
+            ancestors_str += name.replace('_', ' ')
         else:
-            ancestors_str += node.name
+            ancestors_str += node.name.replace('_', ' ')
 
         return ancestors_str

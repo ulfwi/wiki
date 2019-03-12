@@ -19,7 +19,7 @@ class TestWiki(unittest.TestCase):
         wiki_searcher = wiki.WikiSearcher(wiki_url)
 
         shortest_path = wiki_searcher.find_shortest_path(start, goal)
-        actual_shortest_path = 'Scottish_Terrier/Franklin_Delano_Roosevelt/Adolf_Hitler'
+        actual_shortest_path = 'Scottish Terrier/Franklin Delano Roosevelt/Adolf Hitler'
         self.assertEqual(shortest_path, actual_shortest_path)
 
 
@@ -35,9 +35,32 @@ class TestWiki(unittest.TestCase):
         wiki_searcher = wiki.WikiSearcher(wiki_url, retrieval_mode='offline')
 
         shortest_path = wiki_searcher.find_shortest_path(start, goal)
-        actual_shortest_path = 'Torslanda/Göteborgs_kommun/1938/Adolf_Hitler_fdc0'
+        actual_shortest_path = 'Torslanda/Göteborgs kommun/1938/Adolf Hitler fdc0'
         self.assertEqual(shortest_path, actual_shortest_path)
 
+    def test_underscore_input(self):
+        """
+        Tests offline
+        """
+
+        wiki_url = ''
+
+        # with underscore
+        start = 'Skolor_i_Arboga'
+        goal = 'Adolf_Hitler'
+
+        wiki_searcher = wiki.WikiSearcher(wiki_url, retrieval_mode='offline')
+
+        shortest_path = wiki_searcher.find_shortest_path(start, goal)
+        actual_shortest_path = 'Skolor i Arboga 217d/Arboga/1952/Adolf Hitler fdc0'
+        self.assertEqual(shortest_path, actual_shortest_path)
+
+        # without underscore
+        start = 'Skolor i Arboga'
+        goal = 'Adolf Hitler'
+
+        shortest_path = wiki_searcher.find_shortest_path(start, goal)
+        self.assertEqual(shortest_path, actual_shortest_path)
 
     def test_offline_gavle(self):
         """
@@ -51,7 +74,7 @@ class TestWiki(unittest.TestCase):
         wiki_searcher = wiki.WikiSearcher(wiki_url, retrieval_mode='offline')
 
         shortest_path = wiki_searcher.find_shortest_path(start, goal)
-        actual_shortest_path = 'Gävle/Gävleborgs_län/Jämtlands_län/Svenskt_Näringsliv_af61'
+        actual_shortest_path = 'Gävle/Gävleborgs län/Jämtlands län/Svenskt Näringsliv af61'
         self.assertEqual(shortest_path, actual_shortest_path)
 
 
@@ -67,7 +90,7 @@ class TestWiki(unittest.TestCase):
         wiki_searcher = wiki.WikiSearcher(wiki_url)
 
         shortest_path = wiki_searcher.find_shortest_path(start, goal)
-        actual_shortest_path = 'Smörgåstårta/Sveriges_nationaldag/Svenskt_Näringsliv'
+        actual_shortest_path = 'Smörgåstårta/Sveriges nationaldag/Svenskt Näringsliv'
         self.assertEqual(shortest_path, actual_shortest_path)
 
     # def test_long_path(self):

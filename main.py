@@ -13,17 +13,19 @@ def main():
 
     # start wiki-page
     # start = 'Scottish_Terrier'
+    start = 'Skolor i Arboga'
     # start = 'Zara_Larsson'
     # start = 'Torslanda'
-    start = 'Gävle'
+    # start = 'Gävle'
     # start = 'Smörgåstårta'
     # start = 'Adolf_Hitler'
     # start = 'Europamästerskapet_i_fotboll_2008'
 
     # goal wiki-page
-    goal = 'Adolf_Hitler'
+    # goal = 'Adolf_Hitler'
+    goal = 'Adolf Hitler'
     # goal = 'Zara_Larsson'
-    # goal = 'Svenskt_Näringsliv'
+    # goal = 'Svenskt Näringsliv'
 
     # create wiki search object
     wiki_searcher = wiki.WikiSearcher(wiki_url, retrieval_mode)

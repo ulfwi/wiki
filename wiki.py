@@ -120,6 +120,10 @@ class WikiSearcher(object):
     def find_shortest_path(self, start, goal, print_time_bool=False):
         """ Finds shortest path between start and goal on wikipedia """
 
+        # replace underscore with spaces to get wiki subject name
+        start = start.replace(' ', '_')
+        goal = goal.replace(' ', '_')
+
         # find offline file
         if self.retrieval_mode == 'offline':
             start = self.find_offline_file(start)
